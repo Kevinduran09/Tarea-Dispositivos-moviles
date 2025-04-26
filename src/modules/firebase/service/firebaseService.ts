@@ -2,8 +2,9 @@
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { auth, db, authReady } from "../../../core/firebaseConfig";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { useAuthStore } from "../../../store/userStore";
+
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
+import { useAuthStore } from "../../../context/userStore";
 
 interface successResponse {
     user: {

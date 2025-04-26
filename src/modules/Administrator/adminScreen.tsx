@@ -13,6 +13,7 @@ import ModalNotificationForm from './components/ModalNotificationForm';
 interface TokenInfo {
   uid: string;
   token: string;
+  owner:string;
 }
 
 interface ExtraDataField {

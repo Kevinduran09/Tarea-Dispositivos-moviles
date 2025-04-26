@@ -4,7 +4,8 @@ import { loginWithGoogle } from '../service/firebaseService';
 import { User } from 'firebase/auth';
 import { IonButton, IonLoading } from '@ionic/react';
 import Google from '../../../components/GoogleIcon';
-import { useAuthStore } from '../../../store/userStore';
+import { useAuthStore } from '../../../context/userStore';
+
 
 export const GoogleAuthButton = () => {
     const [loading, setLoading] = useState(false)

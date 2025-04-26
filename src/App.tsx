@@ -6,7 +6,6 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 
 /* Pages */
 import { LoginScreen } from './modules/LoginPage/LoginScreen';
-import Home from './pages/Home';
 import Account from './pages/Account';
 import Tabs from './pages/Tabs';
 
@@ -55,6 +54,7 @@ const App: React.FC = () => {
           {user ? (
             <>
               <Route path="/tabs" render={() => <Tabs />} />
+            
               <Redirect exact from="/" to="/tabs/home" />
             </>
           ) : (

@@ -1,6 +1,7 @@
 import { PushNotifications } from '@capacitor/push-notifications';
 
 import { savePushToken } from '../Services/firebase/notification';
+import { useAuthStore } from '../context/userStore';
 
 
 class NotificationService {
@@ -41,8 +42,8 @@ class NotificationService {
         // Escuchar por eventos de notificaciones push
         PushNotifications.addListener('registration', (token) => {
           console.log(token);
-          
-          savePushToken( token.value, uid);          
+          const {user} = useAuthStore()
+          savePushToken( token.value, uid,user?.displayName ||'Sin nombre' );          
         });
         
         PushNotifications.addListener('pushNotificationReceived', (notification) => {

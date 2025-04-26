@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
-import { useAuthStore } from '../../store/userStore';  
+import { useAuthStore } from '../../context/userStore';
+
 
 interface ProtectedRouteProps extends RouteProps {
     component: React.ComponentType<any>;

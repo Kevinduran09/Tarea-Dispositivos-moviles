@@ -1,21 +1,10 @@
-import MessageListItem from '../components/MessageListItem';
-import { useState } from 'react';
 import {
   IonContent,
-  IonHeader,
-  IonList,
   IonPage,
-  IonRefresher,
-  IonRefresherContent,
-  IonTitle,
-  IonToolbar,
-  useIonViewWillEnter
-} from '@ionic/react';
-import './Home.css';
-import InitialScreen from '../modules/firebase/page/InitialScreen';
-import { GoogleAuthButton } from '../modules/firebase/components/GoogleAuth';
+  IonTitle} from '@ionic/react';
+
 import AppHeader from '../components/head/AppHeader';
-import { useAuthStore } from '../store/userStore';
+import { useAuthStore } from '../context/userStore';
 
 const Home: React.FC = () => {
   const {user,role} = useAuthStore()

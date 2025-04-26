@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { IonAvatar, IonContent, IonPopover } from '@ionic/react';
 import { useHistory } from 'react-router';
 import { getAuth, signOut } from 'firebase/auth';
-import { useAuthStore } from '../store/userStore';
+import { useAuthStore } from '../context/userStore';
+
 
 function Avatar() {
     const [showPopover, setShowPopover] = useState(false);
