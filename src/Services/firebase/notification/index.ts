@@ -2,6 +2,8 @@ import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import { db } from "../../../core/firebaseConfig";
 
 export const savePushToken = async (token: string, uid: string,name:string) => {
+ 
+  
   try {
     await setDoc(doc(db, "deviceTokens", uid), {
       token: token,

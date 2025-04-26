@@ -3,7 +3,6 @@ import { PushNotifications } from '@capacitor/push-notifications';
 import { savePushToken } from '../Services/firebase/notification';
 import { useAuthStore } from '../context/userStore';
 
-
 class NotificationService {
   private static instance: NotificationService;
   private listeners: Function[] = [];
@@ -35,14 +34,20 @@ class NotificationService {
       // Solicitar permiso para notificaciones push
       const result = await PushNotifications.requestPermissions();
       
+      console.log('Permiso para notificaciones push:', result);
+      
       if (result.receive === 'granted') {
         // Registrar para recibir notificaciones push
         await PushNotifications.register();
+        console.log('Registrado para recibir notificaciones push');
         
         // Escuchar por eventos de notificaciones push
         PushNotifications.addListener('registration', (token) => {
-          console.log(token);
-          const {user} = useAuthStore()
+          
+          const user = useAuthStore.getState().user;
+          console.log("usuario en el servicio de notificaciones (notification, l 49): ",user);
+          
+          
           savePushToken( token.value, uid,user?.displayName ||'Sin nombre' );          
         });
         

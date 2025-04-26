@@ -33,11 +33,12 @@ export const buildPayload = (formState: NotificationFormData): SendNotificationP
     };
 };
 
+const URL_BASE = "172.29.176.1:3000"
 export const sendSingleNotification = async (formState: NotificationFormData): Promise<string> => {
     const payload = buildPayload(formState);
-    console.log(`url: ${"http://192.168.50.221:3000"}`);
+    console.log(`url: ${`http://${URL_BASE}:3000`}`);
     
-    const response = await fetch('http://192.168.50.221:3000/api/send-notification', {
+    const response = await fetch(`http://${URL_BASE}/api/send-notification`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: formState.token, ...payload }),
@@ -50,7 +51,7 @@ export const sendSingleNotification = async (formState: NotificationFormData): P
 export const sendMulticastNotification = async (formState: NotificationFormData, selectedTokens: string[]): Promise<string> => {
     const payload = buildPayload(formState);
 
-    const response = await fetch('http://192.168.50.221:3000/api/send-multicast', {
+    const response = await fetch(`http://${URL_BASE}/api/send-multicast`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({tokens:selectedTokens,...payload}),

@@ -46,6 +46,7 @@ const AdminPage: React.FC = () => {
     const fetchDevices = async () => {
       const tokens = await getAllPushTokens();
       setDevices(tokens);
+      
     };
     fetchDevices();
   }, []);

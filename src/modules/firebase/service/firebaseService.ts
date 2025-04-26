@@ -73,7 +73,7 @@ export const loginWithGoogle = async () => {
             const existingUser = useAuthStore.getState().user;
             if (existingUser && existingUser.uid === user.uid) {
                 console.log("El usuario ya está autenticado y en el store.");
-                return;
+         
             }
             console.log('seteando user en store: ',user);
             
