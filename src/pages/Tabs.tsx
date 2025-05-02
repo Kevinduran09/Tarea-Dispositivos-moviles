@@ -5,16 +5,15 @@ import { home, homeOutline, person, personCircle, personCircleOutline, personOut
 import Home from './Home';
 import AdminPage from '../modules/Administrator/adminScreen'
 import ProtectedRoute from '../components/segurity/ProtectedRouter';
-import { useAuthStore } from '../context/userStore';
+import { useAuthStore } from '../store/useAuthStore';
 import Account from './Account';
 import DeviceInfoPage from './DeviceInfoPage';
 
 const Tabs: React.FC = () => {
   const role = useAuthStore((state) => state.role);
-  const user = useAuthStore((state)=> state.user);
-  console.log("usuario en tabs (Tabs, l 12): ",user);
-  console.log("rol en tabs (Tabs, l 13): ",role);
-  
+
+
+
   return (
     <IonTabs>
       <IonRouterOutlet>

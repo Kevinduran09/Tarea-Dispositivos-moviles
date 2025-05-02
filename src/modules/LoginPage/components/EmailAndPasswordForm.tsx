@@ -26,7 +26,7 @@ export default function EmailAndPasswordForm() {
             history.push('/tabs/home');
         } catch (error: any) {
             setLoading(false);
-            console.log(error);
+            
             
             setError(error.message);
         } finally {

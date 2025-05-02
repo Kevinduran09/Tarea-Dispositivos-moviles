@@ -4,7 +4,7 @@ import { auth, db, authReady } from "../../../core/firebaseConfig";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
-import { useAuthStore } from "../../../context/userStore";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 interface successResponse {
     user: {
@@ -24,14 +24,13 @@ export const Login = async (email: string, password: string): Promise<successRes
     try {
         await authReady;
         const response = await signInWithEmailAndPassword(auth, email, password);
-     
+
         const user = response.user;
         await syncUserRole(user.uid)
         const userAuth = auth.currentUser;
-        
-        useAuthStore.getState().setUser(userAuth); // solo si tu store espera un User realolo si tu store espera un User real
-        useAuthStore.getState().setIsAuthenticated(true);
-        console.log(response);
+
+        useAuthStore.getState().setUser(userAuth);
+
         return response
     } catch (error) {
         console.error('error login in firebase', error);
@@ -49,7 +48,7 @@ export const register = async (email: string, password: string, username: string
 
         const userAuth = auth.currentUser;
         useAuthStore.getState().setUser(userAuth); // solo si tu store espera un User real
-        useAuthStore.getState().setIsAuthenticated(true);
+
 
         return response;
     } catch (error) {
@@ -69,22 +68,22 @@ export const loginWithGoogle = async () => {
             const credential = await GoogleAuthProvider.credential(result?.credential?.idToken);
             const userCredential = await signInWithCredential(auth, credential);
             const user = userCredential.user;
-            console.log(user);
+
             const existingUser = useAuthStore.getState().user;
             if (existingUser && existingUser.uid === user.uid) {
-                console.log("El usuario ya está autenticado y en el store.");
-         
+
+
             }
-            console.log('seteando user en store: ',user);
-            
+
+
             // Seteamos el user directo de Firebase en el store
             useAuthStore.getState().setUser(user);
 
             // Consultamos o creamos el rol
             await syncUserRole(user.uid);
         }
-     
-        
+
+
     } catch (error) {
         console.error("Error iniciando sesión con Google: ", error);
     }
@@ -95,19 +94,18 @@ const syncUserRole = async (uid: string) => {
     try {
         const roleRef = doc(db, "rol_user", uid);
         const roleSnap = await getDoc(roleRef);
-        console.log(roleSnap);
-        
+
+
         if (roleSnap.exists()) {
             const role = roleSnap.data().role;
-            console.log('rol del usuario: ',role);
-            
+
+
             useAuthStore.getState().setRole(role);
         } else {
             await setDoc(roleRef, { role: 'user' });
             useAuthStore.getState().setRole('user');
         }
 
-        useAuthStore.getState().setIsAuthenticated(true);
     } catch (error) {
         console.error("Error sincronizando el rol del usuario: ", error);
     }

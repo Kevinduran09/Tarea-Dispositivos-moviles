@@ -12,14 +12,14 @@ const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
     measurementId: import.meta.env.VITE_MEASUREMENT_ID
 };
-console.log(firebaseConfig);
+
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const db = getFirestore(app)
 
 const authReady = setPersistence(auth, browserLocalPersistence).then(() => {
-    console.log('Persistencia configurada perfectamente');
+    
 
 }).catch((err) => {
     console.error('Error al configurar la persistencia', err)

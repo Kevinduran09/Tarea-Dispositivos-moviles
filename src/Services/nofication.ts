@@ -1,7 +1,7 @@
 import { PushNotifications } from '@capacitor/push-notifications';
 
 import { savePushToken } from '../Services/firebase/notification';
-import { useAuthStore } from '../context/userStore';
+import { useAuthStore } from '../store/useAuthStore';
 
 class NotificationService {
   private static instance: NotificationService;
@@ -25,40 +25,41 @@ class NotificationService {
 
     this.loadSavedNotifications();
   }
- 
+
 
   // Inicializar para dispositivos nativos
   private async initializeNative(uid: string) {
     try {
-       
+
       // Solicitar permiso para notificaciones push
       const result = await PushNotifications.requestPermissions();
-      
-      console.log('Permiso para notificaciones push:', result);
-      
+
+
+
       if (result.receive === 'granted') {
         // Registrar para recibir notificaciones push
         await PushNotifications.register();
-        console.log('Registrado para recibir notificaciones push');
-        
+
+
         // Escuchar por eventos de notificaciones push
         PushNotifications.addListener('registration', (token) => {
-          
-          const user = useAuthStore.getState().user;
-          console.log("usuario en el servicio de notificaciones (notification, l 49): ",user);
-          
-          
-          savePushToken( token.value, uid,user?.displayName ||'Sin nombre' );          
+
+
+          const user = useAuthStore.getState().user
+
+          savePushToken(token.value, uid, user?.displayName || 'Sin nombre');
+
+          useAuthStore.getState().setDeviceToken(token.value)
         });
-        
+
         PushNotifications.addListener('pushNotificationReceived', (notification) => {
-          console.log('Notificación recibida:', notification);
+
           this.addNotification(notification);
           this.notifyListeners();
         });
-        
+
         PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-          console.log('Acción realizada en notificación:', notification);
+
           this.addNotification(notification.notification);
           this.notifyListeners();
         });
@@ -78,7 +79,7 @@ class NotificationService {
       read: false,
       date: new Date().toISOString()
     };
-    
+
     this.notifications = [newNotification, ...this.notifications];
     this.saveNotifications();
   }
@@ -112,7 +113,7 @@ class NotificationService {
 
   // Marcar notificación como leída
   markAsRead(id: string) {
-    this.notifications = this.notifications.map(n => 
+    this.notifications = this.notifications.map(n =>
       n.id === id ? { ...n, read: true } : n
     );
     this.saveNotifications();

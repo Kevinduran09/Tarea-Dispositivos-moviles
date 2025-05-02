@@ -1,5 +1,6 @@
 import { IonContent, IonHeader, IonPage } from '@ionic/react';
-import { useAuthStore } from '../context/userStore';
+import { useAuthStore } from '../store/useAuthStore';
+import AppHeader from '../components/head/AppHeader';
 
 const Account: React.FC = () => {
     const user = useAuthStore((state: any) => state.user);
@@ -7,9 +8,9 @@ const Account: React.FC = () => {
 
     return (
         <IonPage id="account-page">
-            <IonHeader className="ion-no-border" />
-            <IonContent className="p-4 bg-gray-100">
-                <div className="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
+            <AppHeader title='Home - Notifaciones' showMenuButton={true} />
+            <IonContent className="p-4 bg-gray-100 mt-4">
+                <div className="max-w-md mx-auto bg-white shadow-md rounded-lg p-6 mt-4">
                     <h1 className="text-2xl text-center font-bold text-gray-800 mb-4">Mi Cuenta</h1>
                     {user ? (
                         <div className="space-y-6">

@@ -2,18 +2,14 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 
 /* Pages */
 import { LoginScreen } from './modules/LoginPage/LoginScreen';
-import Account from './pages/Account';
 import Tabs from './pages/Tabs';
 
 import { RegisterScreen } from './pages/Register';
 
 /* Components */
-import ProtectedRoute from './components/segurity/ProtectedRouter';  // Componente para ruta protegida
-
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
@@ -25,27 +21,26 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import './theme/variables.css';
-import { useState, useEffect } from 'react';
+import { useAuth } from './hooks/useAuth';
+import SplashScreen from './components/SplashScreen';
+import { useEffect } from 'react';
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { loading, user } = useAuth(); 
+  console.log('is loading: ', loading);
+  console.log('is user in the app: ', user);
 
+  // Usamos un useEffect para asegurar que el componente se renderice correctamente después de que loading y user cambien
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      console.log('firebase user: ', firebaseUser);
-      
-      setUser(firebaseUser);
-      setLoading(false);
-    });
+    console.log('State updated: loading:', loading, 'user:', user);
+  }, [loading, user]);
 
-    return () => unsubscribe();
-  }, []);
-
-  if (loading) return null; // O un splash screen
+  if (loading) {
+  
+    return <SplashScreen/>
+  }
 
   return (
     <IonApp>
@@ -54,8 +49,9 @@ const App: React.FC = () => {
           {user ? (
             <>
               <Route path="/tabs" render={() => <Tabs />} />
-            
-              <Redirect exact from="/" to="/tabs/home" />
+              <Route exact path="/">
+                <Redirect to="/tabs/home" />
+              </Route>
             </>
           ) : (
             <>

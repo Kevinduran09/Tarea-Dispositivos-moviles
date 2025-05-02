@@ -30,7 +30,7 @@ const UserAndPasswordForm: React.FC = () => {
 
     try {
       const result = await Login(email, password)
-      console.log(result);
+      
       setLoading(false);
     } catch (error: any) {
       setLoading(false);

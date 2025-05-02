@@ -10,7 +10,7 @@ export const savePushToken = async (token: string, uid: string,name:string) => {
       owner:name,
       updatedAt: new Date(),
     });
-    alert("✅ Token guardado correctamente"); // ✅
+    alert("✅ Token guardado correctamente"); 
   } catch (error) {
     alert("❌ Error al guardar token: " + error);
   }
@@ -31,7 +31,7 @@ export const getAllPushTokens = async () => {
       });
     });
 
-    return tokens; // Podés retornarlos o hacer algo con ellos
+    return tokens; 
   } catch (error) {
     console.error("❌ Error al obtener los tokens:", error);
     return [];

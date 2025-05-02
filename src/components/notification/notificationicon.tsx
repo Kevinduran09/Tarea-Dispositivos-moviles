@@ -17,10 +17,10 @@ const NotificationIcon: React.FC = () => {
   useEffect(() => {
     authReady.then(() => {
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        console.log('User in the app: ',user);
+        
         
         if (user) {
-          console.log('User is logged in. (notifications, l 23): ',user.uid);
+          
           
           const info = await Device.getInfo();
           if(info.platform == 'web') return

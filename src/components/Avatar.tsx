@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IonAvatar, IonContent, IonPopover } from '@ionic/react';
 import { useHistory } from 'react-router';
 import { getAuth, signOut } from 'firebase/auth';
-import { useAuthStore } from '../context/userStore';
+import { useAuthStore } from '../store/useAuthStore';
 
 
 function Avatar() {
@@ -13,7 +13,7 @@ function Avatar() {
     const { user } = useAuthStore()
     async function handleLogout() {
         await signOut(auth);
-        console.log("Sesión cerrada correctamente");
+        
         history.push('/login');
     }
 

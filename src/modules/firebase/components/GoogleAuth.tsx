@@ -4,7 +4,7 @@ import { loginWithGoogle } from '../service/firebaseService';
 import { User } from 'firebase/auth';
 import { IonButton, IonLoading } from '@ionic/react';
 import Google from '../../../components/GoogleIcon';
-import { useAuthStore } from '../../../context/userStore';
+import { useAuthStore } from '../../../store/useAuthStore';
 
 
 export const GoogleAuthButton = () => {
@@ -15,12 +15,12 @@ export const GoogleAuthButton = () => {
         try {
             setLoading(true);
             await loginWithGoogle()
-            if (useAuthStore.getState().isAuthenticated) {
+            if (useAuthStore.getState().user) {
                 history.push('/tabs/home')
             }
         } catch (error: any) {
             setLoading(false);
-            console.log("Error durante el inicio de sesión con Google: " + error);
+            
         } finally {
             setLoading(false)
         }
