@@ -1,0 +1,17 @@
+.ion-content-bg-t {
+    --background: 'transparent'
+}
+
+body {
+    background: transparent !important;
+}
+
+ .custom-modal {
+     --border-radius: 25px 25px 0 0;
+     
+ }
+
+ .custom-modal::part(content) {
+     border-radius: 25px 25px 0 0;
+     
+ }

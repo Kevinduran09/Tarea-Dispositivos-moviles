@@ -24,17 +24,16 @@ import './theme/variables.css';
 import { useAuth } from './hooks/useAuth';
 import SplashScreen from './components/SplashScreen';
 import { useEffect } from 'react';
-
+import { StatusBar, Style } from '@capacitor/status-bar';
 setupIonicReact();
+
 
 const App: React.FC = () => {
   const { loading, user } = useAuth(); 
-  console.log('is loading: ', loading);
-  console.log('is user in the app: ', user);
 
   // Usamos un useEffect para asegurar que el componente se renderice correctamente después de que loading y user cambien
   useEffect(() => {
-    console.log('State updated: loading:', loading, 'user:', user);
+  
   }, [loading, user]);
 
   if (loading) {
