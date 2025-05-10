@@ -21,17 +21,24 @@ npm install --force
 
 ### 2. Agregar las variables de entorno
 
-Crea un archivo `.env` con las siguientes variables (reemplaza con los datos de tu proyecto Firebase):
+Crea un archivo `.env` en la raíz del proyecto con las siguientes variables (reemplaza con los datos de tu proyecto Firebase):
 
 ```env
-VITE_FIREBASE_API_KEY=TU_API_KEY
-VITE_FIREBASE_AUTH_DOMAIN=TU_AUTH_DOMAIN
-VITE_FIREBASE_PROJECT_ID=TU_PROJECT_ID
-VITE_FIREBASE_STORAGE_BUCKET=TU_STORAGE_BUCKET
-VITE_FIREBASE_MESSAGING_SENDER_ID=TU_MESSAGING_SENDER_ID
-VITE_FIREBASE_APP_ID=TU_APP_ID
-VITE_MEASUREMENT_ID=TU_MEASUREMENT_ID
+# Firebase Configuration
+VITE_FIREBASE_API_KEY=tu_api_key
+VITE_FIREBASE_AUTH_DOMAIN=tu_proyecto.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=tu_proyecto
+VITE_FIREBASE_STORAGE_BUCKET=tu_proyecto.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=tu_sender_id
+VITE_FIREBASE_APP_ID=tu_app_id
+VITE_MEASUREMENT_ID=tu_measurement_id
+
+# Variables adicionales requeridas
+VITE_APP_NAME=My Travels App
+VITE_APP_DESCRIPTION=Aplicación de viajes con notificaciones push
 ```
+
+> **Nota**: El archivo `.env` está incluido en `.gitignore` por seguridad. Asegúrate de mantener una copia segura de tus variables de entorno.
 
 ### 3. Agregar archivo de configuración de Firebase
 
