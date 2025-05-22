@@ -31,7 +31,7 @@ VITE_FIREBASE_PROJECT_ID=tu_proyecto
 VITE_FIREBASE_STORAGE_BUCKET=tu_proyecto.appspot.com
 VITE_FIREBASE_MESSAGING_SENDER_ID=tu_sender_id
 VITE_FIREBASE_APP_ID=tu_app_id
-VITE_MEASUREMENT_ID=tu_measurement_id
+VITE_MEASUREMENT_ID=**tu_measurement_id**
 
 # Variables adicionales requeridas
 VITE_APP_NAME=My Travels App
