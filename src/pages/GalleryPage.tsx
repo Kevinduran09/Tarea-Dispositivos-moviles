@@ -1,27 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { IonContent, IonPage, IonIcon, IonLoading } from '@ionic/react';
-import { camera } from 'ionicons/icons';
+import { IonContent, IonPage, IonIcon, IonLoading, IonAlert, IonModal, IonButton } from '@ionic/react';
+import { camera, close, trash, create } from 'ionicons/icons';
 import { CameraService, Photo } from '../Services/CameraService';
 import { useAuthStore } from '../store/useAuthStore';
 import AppHeader from '../components/head/AppHeader';
-import { StatusBar, Style } from '@capacitor/status-bar';
+import EmptyState from '../components/gallery/EmptyState';
+import CategoryFilter from '../components/gallery/CategoryFilter';
+import PhotoGrid from '../components/gallery/PhotoGrid';
+import '../theme/maps.css'
+const CATEGORIES = [
+  { id: 'all', label: 'Todas' },
+  { id: 'Personal', label: 'Personal' },
+  { id: 'Trabajo', label: 'Trabajo' },
+  { id: 'Paisajes', label: 'Paisajes' },
+  { id: 'Mascotas', label: 'Mascotas' },
+  { id: 'Otros', label: 'Otros' }
+];
 
 const GalleryPage: React.FC = () => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [photoToDelete, setPhotoToDelete] = useState<Photo | null>(null);
+  const [showCategorySelect, setShowCategorySelect] = useState(false);
+  const [photoToUpdate, setPhotoToUpdate] = useState<Photo | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
   const user = useAuthStore((state) => state.user);
   const cameraService = new CameraService();
 
   useEffect(() => {
     loadPhotos();
- 
-  }, []);
-
-
+  }, [selectedCategory]);
 
   const loadPhotos = async () => {
     try {
-      const photosList = await cameraService.getPhotos();
+      setLoading(true);
+      const photosList = await cameraService.getPhotos(selectedCategory);
       setPhotos(photosList);
     } catch (error) {
       console.error('Error al cargar las fotos:', error);
@@ -33,7 +49,6 @@ const GalleryPage: React.FC = () => {
   const handleTakePhoto = async () => {
     try {
       if (!user) return;
-      
       const photoUri = await cameraService.takePicture();
       const newPhoto = await cameraService.uploadPhoto(photoUri, user.uid);
       setPhotos(prevPhotos => [newPhoto, ...prevPhotos]);
@@ -42,48 +57,70 @@ const GalleryPage: React.FC = () => {
     }
   };
 
+  const handleDeleteClick = (photo: Photo) => {
+    setPhotoToDelete(photo);
+    setShowDeleteAlert(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!photoToDelete) return;
+    try {
+      await cameraService.deletePhoto(photoToDelete);
+      setPhotos(prevPhotos => prevPhotos.filter(p => p.id !== photoToDelete.id));
+    } catch (error) {
+      console.error('Error al eliminar la foto:', error);
+    } finally {
+      setShowDeleteAlert(false);
+      setPhotoToDelete(null);
+    }
+  };
+
+  const handleCategoryClick = (photo: Photo) => {
+    setPhotoToUpdate(photo);
+    setShowCategorySelect(true);
+  };
+
+  const handleCategoryChange = async (category: string) => {
+    if (!photoToUpdate?.id) return;
+    try {
+      await cameraService.updatePhotoCategory(photoToUpdate.id, category);
+      await loadPhotos();
+    } catch (error) {
+      console.error('Error al actualizar la categoría:', error);
+    } finally {
+      setShowCategorySelect(false);
+      setPhotoToUpdate(null);
+    }
+  };
+
+  const handlePhotoClick = (photo: Photo) => {
+    setSelectedPhoto(photo);
+    setShowPhotoModal(true);
+  };
+
   return (
     <IonPage className="ion-page">
       <AppHeader title="Galería" showMenuButton={true} />
-      <IonContent className="ion-padding-top ion-padding-bottom">
+      <IonContent className="!mt-2">
         <IonLoading isOpen={loading} message="Cargando fotos..." />
-        
-        {photos.length === 0 && !loading ? (
-          <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-            <div className="w-24 h-24 mb-4 text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">No hay fotos</h3>
-            <p className="text-gray-500 mb-4">Toma tu primera foto usando el botón de la cámara</p>
-          </div>
-        ) : (
-          <div className="px-2 pt-2 pb-20">
-            <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-2">
-              {photos.map((photo) => (
-                <div key={photo.id} className="break-inside-avoid mb-2">
-                  <div className="relative group rounded-xl overflow-hidden">
-                    <img 
-                      src={photo.url} 
-                      alt="Foto" 
-                      className="w-full h-auto object-cover rounded-xl transition-transform duration-300 group-hover:scale-[1.02]"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="absolute bottom-0 left-0 right-0 p-3">
-                        <span className="text-white text-sm font-medium">
-                          {new Date(photo.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
+        <div className="sticky top-0 z-10 bg-white shadow-sm pt-3">
+          <CategoryFilter
+            categories={CATEGORIES}
+            selected={selectedCategory}
+            onSelect={setSelectedCategory}
+          />
+        </div>
+        {photos.length === 0 && !loading ? (
+          <EmptyState selectedCategory={selectedCategory} categories={CATEGORIES} />
+        ) : (
+          <PhotoGrid
+            photos={photos}
+            onEdit={handleCategoryClick}
+            onDelete={handleDeleteClick}
+            onPhotoClick={handlePhotoClick}
+          />
+        )}
         <div className="fixed bottom-6 right-6 z-50 safe-area-bottom">
           <button
             onClick={handleTakePhoto}
@@ -92,6 +129,114 @@ const GalleryPage: React.FC = () => {
             <IonIcon icon={camera} className="text-white text-2xl"></IonIcon>
           </button>
         </div>
+
+        <IonAlert
+          isOpen={showDeleteAlert}
+          onDidDismiss={() => setShowDeleteAlert(false)}
+          header="Eliminar foto"
+          message="¿Estás seguro de que quieres eliminar esta foto?"
+          buttons={[
+            {
+              text: 'Cancelar',
+              role: 'cancel',
+              cssClass: 'secondary'
+            },
+            {
+              text: 'Eliminar',
+              cssClass: 'danger',
+              handler: handleDeleteConfirm
+            }
+          ]}
+        />
+        {/* Modal para seleccionar la categoría */}
+        <IonModal
+          isOpen={showCategorySelect}
+          onDidDismiss={() => setShowCategorySelect(false)}
+          breakpoints={[0, 0.5]}
+          initialBreakpoint={0.5}
+          className="custom-modal"
+        >
+          <IonContent className="ion-no-border ion-padding">
+            <div className="flex flex-col h-full">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-gray-800">Seleccionar categoría</h2>
+                <IonButton fill="clear" onClick={() => setShowCategorySelect(false)}>
+                  <IonIcon icon={close} slot="icon-only" className='size-8' />
+                </IonButton>
+              </div>
+
+              <div className="flex-1 gap-2 space-y-2">
+                {CATEGORIES.filter(c => c.id !== 'all').map(category => (
+                  <button
+                    key={category.id}
+                    onClick={() => handleCategoryChange(category.id)}
+                    className="w-full p-4 !text-lg text-left rounded-lg bg-white border border-gray-200 hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </IonContent>
+        </IonModal>
+
+
+        {/* Modal para ver la foto */}
+        <IonModal
+          isOpen={showPhotoModal}
+          onDidDismiss={() => setShowPhotoModal(false)}
+          breakpoints={[0, 0.5]}
+          initialBreakpoint={0.5}
+          className="custom-modal"
+        >
+          <IonContent className="ion-padding">
+            <div className="flex flex-col items-center justify-center py-4">
+              {selectedPhoto && (
+                <>
+                  <img 
+                    src={selectedPhoto.url} 
+                    alt="Foto" 
+                    className="w-32 h-32 object-cover rounded-lg mb-6"
+                  />
+                  <div className="w-full max-w-sm space-y-3">
+                    <IonButton 
+                      expand="block" 
+                      onClick={() => {
+                        handleCategoryClick(selectedPhoto);
+                        setShowPhotoModal(false);
+                      }}
+                      className="!bg-yellow-500 !text-white"
+                    >
+                      <IonIcon icon={create} slot="start" />
+                      Editar categoría
+                    </IonButton>
+                    
+                    <IonButton 
+                      expand="block" 
+                      onClick={() => {
+                        handleDeleteClick(selectedPhoto);
+                        setShowPhotoModal(false);
+                      }}
+                      className="!bg-red-500 !text-white"
+                    >
+                      <IonIcon icon={trash} slot="start" />
+                      Eliminar foto
+                    </IonButton>
+
+                    <IonButton 
+                      expand="block" 
+                      fill="clear" 
+                      onClick={() => setShowPhotoModal(false)}
+                      className="!text-gray-600"
+                    >
+                      Cancelar
+                    </IonButton>
+                  </div>
+                </>
+              )}
+            </div>
+          </IonContent>
+        </IonModal>
       </IonContent>
     </IonPage>
   );

@@ -1,6 +1,6 @@
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc, getDocs, query, orderBy } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { collection, addDoc, getDocs, query, orderBy, doc, deleteDoc, updateDoc, where } from 'firebase/firestore';
 import { db } from '../core/firebaseConfig';
 
 export interface Photo {
@@ -8,6 +8,7 @@ export interface Photo {
   url: string;
   createdAt: Date;
   userId: string;
+  category?: string;
 }
 
 export class CameraService {
@@ -28,7 +29,7 @@ export class CameraService {
     return image.webPath;
   }
 
-  async uploadPhoto(photoUri: string, userId: string): Promise<Photo> {
+  async uploadPhoto(photoUri: string, userId: string, category?: string): Promise<Photo> {
     try {
       const response = await fetch(photoUri);
       const blob = await response.blob();
@@ -43,9 +44,9 @@ export class CameraService {
       const photoData: Omit<Photo, 'id'> = {
         url: downloadUrl,
         createdAt: new Date(),
-        userId
+        userId,
+        category
       };
-
 
       const docRef = await addDoc(collection(db, 'photos'), photoData);
       
@@ -56,14 +57,25 @@ export class CameraService {
     }
   }
 
-  async getPhotos(): Promise<Photo[]> {
+  async getPhotos(category?: string): Promise<Photo[]> {
     try {
+      let photosQuery;
 
-      const photosQuery = query(
-        collection(db, 'photos'),
-        orderBy('createdAt', 'desc')
-      );
-       console.log('Ejecutando consulta a Firestore...');
+      if (category && category !== 'all') {
+        console.log('Filtrando por categoría:', category);
+        photosQuery = query(
+          collection(db, 'photos'),
+          where('category', '==', category),
+          orderBy('createdAt', 'desc')
+        );
+      } else {
+        console.log('Obteniendo todas las fotos');
+        photosQuery = query(
+          collection(db, 'photos'),
+          orderBy('createdAt', 'desc')
+        );
+      }
+
       const querySnapshot = await getDocs(photosQuery);
       
       if (querySnapshot.empty) {
@@ -73,20 +85,48 @@ export class CameraService {
 
       const photos = querySnapshot.docs.map(doc => {
         const data = doc.data();
-  
         return {
           id: doc.id,
           url: data.url,
           createdAt: data.createdAt?.toDate() || new Date(),
-          userId: data.userId
+          userId: data.userId,
+          category: data.category || 'Sin categoría'
         } as Photo;
       });
 
-  
+      console.log(`Fotos encontradas: ${photos.length}`);
       return photos;
     } catch (error) {
       console.error('Error al obtener las fotos:', error);
-      throw error; 
+      throw error;
+    }
+  }
+
+  async deletePhoto(photo: Photo): Promise<void> {
+    try {
+      if (!photo.id) throw new Error('ID de foto no encontrado');
+
+      // Eliminar de Firestore
+      await deleteDoc(doc(db, 'photos', photo.id));
+
+      // Eliminar de Storage
+      const storageRef = ref(this.storage, photo.url);
+      await deleteObject(storageRef);
+    } catch (error) {
+      console.error('Error al eliminar la foto:', error);
+      throw error;
+    }
+  }
+
+  async updatePhotoCategory(photoId: string, category: string): Promise<void> {
+    try {
+      const photoRef = doc(db, 'photos', photoId);
+      await updateDoc(photoRef, {
+        category: category
+      });
+    } catch (error) {
+      console.error('Error al actualizar la categoría:', error);
+      throw error;
     }
   }
 } 

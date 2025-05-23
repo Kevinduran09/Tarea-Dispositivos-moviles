@@ -21,3 +21,13 @@ ion-content {
     right: 0;
     bottom: 0;
 }
+
+.custom-modal {
+    --border-radius: 25px 25px 0 0;
+
+}
+
+.custom-modal::part(content) {
+    border-radius: 25px 25px 0 0;
+
+}

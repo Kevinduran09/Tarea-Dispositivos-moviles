@@ -32,7 +32,7 @@ const MapComponent: React.FC = () => {
         setup();
     }, []);
 
-    const handleAddMarker = async (markerData:any) => {
+    const handleAddMarker = async (markerData: any) => {
         if (!mapInstance.current) return;
 
         const markerId = await mapInstance.current.addMarker({
@@ -69,7 +69,7 @@ const MapComponent: React.FC = () => {
                 });
 
                 map.setOnMarkerClickListener(async (marker) => {
-                
+
                 });
             } catch (error) {
                 console.error('Error initializing map:', error);
