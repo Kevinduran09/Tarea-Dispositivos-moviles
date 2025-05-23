@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { browserLocalPersistence, getAuth, setPersistence } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
+import { getStorage } from 'firebase/storage'
 
 
 const firebaseConfig = {
@@ -17,6 +18,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const db = getFirestore(app)
+const storage = getStorage(app)
 
 const authReady = setPersistence(auth, browserLocalPersistence).then(() => {
     
@@ -25,5 +27,5 @@ const authReady = setPersistence(auth, browserLocalPersistence).then(() => {
     console.error('Error al configurar la persistencia', err)
 })
 
-export { auth, db, firebaseConfig, authReady }
+export { auth, db, storage, firebaseConfig, authReady }
 

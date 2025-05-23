@@ -23,7 +23,7 @@ npm install --force
 
 Crea un archivo `.env` en la raíz del proyecto con las siguientes variables (reemplaza con los datos de tu proyecto Firebase):
 
-```env
+```**env**
 # Firebase Configuration
 VITE_FIREBASE_API_KEY=tu_api_key
 VITE_FIREBASE_AUTH_DOMAIN=tu_proyecto.firebaseapp.com

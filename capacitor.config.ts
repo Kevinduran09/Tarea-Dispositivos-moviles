@@ -26,6 +26,9 @@ const config: CapacitorConfig = {
       style: KeyboardStyle.Dark,
       resizeOnFullScreen: true,
     },
+    Camera: {
+      permissions: ['camera']
+    }
   }
 };
 
