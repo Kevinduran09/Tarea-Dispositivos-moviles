@@ -1,110 +1,224 @@
-# My Travels App
+# My MobileApp
 
-Aplicación móvil desarrollada con **Ionic** que permite el envío y recepción de notificaciones push, implementando un sistema de autenticación con **Firebase** y control de accesos mediante roles. Solo los usuarios con rol `admin` pueden acceder a la funcionalidad de envío de notificaciones.
+Aplicación móvil desarrollada con **Ionic** que demuestra las capacidades más importantes del framework para el desarrollo de aplicaciones móviles multiplataforma. Esta aplicación sirve como un ejemplo completo de integración de diversas funcionalidades móviles modernas.
 
-## Características
+## 🚀 Características Principales
 
-- Envío y recepción de notificaciones push.
-- Integración con Firebase Authentication, Firestore y Cloud Messaging.
-- Control de roles: acceso restringido al envío de notificaciones para administradores.
-- Soporte para imágenes en notificaciones.
-- Configuración de prioridad en Android.
+### 🔔 Notificaciones Push
+- Sistema completo de notificaciones push con Firebase Cloud Messaging
+- Soporte para imágenes en notificaciones
+- Configuración de prioridad personalizada para Android
+- Panel de administración para envío de notificaciones
 
-## Instalación
+### 📸 Funcionalidades de Cámara
+- Captura de fotos
+- Procesamiento de imágenes en tiempo real
+- Almacenamiento en la nube
 
-### 1. Clonar el repositorio y acceder a la carpeta del proyecto
+### 🗺️ Integración con Mapas
+- Visualización de mapas interactivos con Google Maps
+- Geolocalización en tiempo real
+- Marcadores personalizados
+- Búsqueda de ubicaciones
+
+### ☁️ Almacenamiento en la Nube
+- Integración con Firebase Storage
+- Gestión de archivos multimedia
+- Sincronización automática
+- Control de acceso basado en roles
+
+### 🔐 Autenticación y Seguridad
+- Sistema de autenticación con Firebase
+- Múltiples proveedores de inicio de sesión:
+  - Google
+  - Email/Contraseña
+  - Autenticación biométrica
+- Control de roles y permisos
+- Protección de rutas
+
+## 🛠️ Instalación
+
+### 1. Requisitos Previos
+- Node.js (v14 o superior)
+- npm o yarn
+- Ionic CLI (`npm install -g @ionic/cli`)
+- Android Studio (para desarrollo Android)
+- Xcode (para desarrollo iOS, solo macOS)
+
+### 2. Configuración del Proyecto
 
 ```bash
-cd my-travels-app
-npm install --force
+# Clonar el repositorio
+git clone https://github.com/tu-usuario/my-mobileapp.git
+
+# Navegar al directorio del proyecto
+cd my-mobileapp
+
+# Instalar dependencias
+npm install
+
+# Iniciar la aplicación en modo desarrollo
+ionic serve
 ```
 
-### 2. Agregar las variables de entorno
+### 3. Configuración de Variables de Entorno
 
-Crea un archivo `.env` en la raíz del proyecto con las siguientes variables (reemplaza con los datos de tu proyecto Firebase):
+Crea un archivo `.env` en la raíz del proyecto:
 
-```**env**
+```env
 # Firebase Configuration
 VITE_FIREBASE_API_KEY=tu_api_key
-VITE_FIREBASE_AUTH_DOMAIN=tu_proyecto.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=tu_proyecto
-VITE_FIREBASE_STORAGE_BUCKET=tu_proyecto.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=tu_sender_id
+VITE_FIREBASE_AUTH_DOMAIN=tu_auth_domain
+VITE_FIREBASE_PROJECT_ID=tu_project_id
+VITE_FIREBASE_STORAGE_BUCKET=tu_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=tu_messaging_sender_id
 VITE_FIREBASE_APP_ID=tu_app_id
-VITE_MEASUREMENT_ID=**tu_measurement_id**
 
-# Variables adicionales requeridas
-VITE_APP_NAME=My Travels App
-VITE_APP_DESCRIPTION=Aplicación de viajes con notificaciones push
+# Google Maps
+VITE_GOOGLE_MAPS_API_KEY=tu_google_maps_api_key
+
+# Servidor de Notificaciones
+VITE_SERVER_URL=tu_server_url
+
+# API de Noticias
+VITE_API_KEY_NEWS=tu_api_key_news
 ```
 
-> **Nota**: El archivo `.env` está incluido en `.gitignore` por seguridad. Asegúrate de mantener una copia segura de tus variables de entorno.
+### 4. Configuración de Plataformas
 
-### 3. Agregar archivo de configuración de Firebase
+#### Android
+```bash
+# Agregar plataforma Android
+ionic capacitor add android
 
-Desde [Firebase Console](https://console.firebase.google.com/), descarga el archivo `google-services.json` de tu proyecto y colócalo en la ruta:
+# Descargar google-services.json desde Firebase Console:
+# 1. Ve a Firebase Console > Configuración del proyecto
+# 2. En la sección "Tus aplicaciones", selecciona Android
+# 3. Registra tu app con el nombre del paquete (com.tuapp.app)
+# 4. Descarga el archivo google-services.json
+# 5. Coloca el archivo en android/app/google-services.json
 
+# Sincronizar cambios
+ionic capacitor sync **android**
+
+# Abrir en Android Studio
+ionic capacitor open android
 ```
-android/app/google-services.json
+
+#### iOS
+```bash
+# Agregar plataforma iOS
+ionic capacitor add ios
+
+# Copiar GoogleService-Info.plist a ios/App/App/
+# Descargar desde Firebase Console > Configuración del proyecto
+
+# Sincronizar cambios
+ionic capacitor sync ios
+
+# Abrir en Xcode
+ionic capacitor open ios
 ```
 
-### 4. Configurar Capacitor
+## 📱 Construcción y Despliegue
 
-Edita el archivo `capacitor.config.ts` y actualiza el `appId`:
+### Android
+```bash
+# Construir la aplicación
+ionic build
 
-```ts
-appId: 'com.tuapp.id', // Reemplaza con tu identificador de aplicación
+# Sincronizar con Android
+ionic capacitor sync android
+
+# Construir APK
+cd android
+./gradlew assembleDebug
 ```
 
-Edita también el `android/app/build.gradle` según sea necesario para que coincida con tu configuración.
+### Configuración del AndroidManifest.xml
 
----
+El archivo `android/app/src/main/AndroidManifest.xml` debe contener las siguientes configuraciones importantes:
 
-## Servidor para envío de notificaciones
+1. **Permisos necesarios**:
+```xml
+<!-- Permisos de ubicación -->
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-feature android:name="android.hardware.location.gps" />
 
-Para enviar las notificaciones, se utiliza un servidor basado en Node.js que se encarga de comunicarse con Firebase.
+<!-- Permisos de cámara y almacenamiento -->
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-### Instalación del servidor
+<!-- Permiso de internet -->
+<uses-permission android:name="android.permission.INTERNET" />
+```
+
+2. **Configuración de Google Maps**:
+```xml
+<meta-data 
+    android:name="com.google.android.geo.API_KEY" 
+    android:value="TU_API_KEY_DE_GOOGLE_MAPS" />
+```
+
+3. **Configuración de FileProvider** (necesario para compartir archivos):
+```xml
+<provider 
+    android:authorities="${applicationId}.fileprovider"
+    android:exported="false"
+    android:grantUriPermissions="true"
+    android:name="androidx.core.content.FileProvider">
+    <meta-data 
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/file_paths" />
+</provider>
+```
+
+### iOS
+```bash
+# Construir la aplicación
+ionic build
+
+# Sincronizar con iOS
+ionic capacitor sync ios
+
+# Abrir en Xcode para construir
+ionic capacitor open ios
+```
+
+## 🔧 Configuración del Servidor de Notificaciones
+
+El servidor de notificaciones está basado en Node.js y utiliza Firebase Admin SDK.
 
 ```bash
+# Navegar al directorio del servidor
 cd firebase-push-tester
+
+# Instalar dependencias
 npm install
+
+# Configurar credenciales
+# Copiar serviceAccountKey.json desde Firebase Console
+
+# Iniciar el servidor
+npm start
 ```
 
-### Credenciales
+## 📚 Documentación Adicional
 
-Crea un archivo llamado `serviceAccountKey.json` en la raíz del servidor con el contenido que puedes descargar desde Firebase Console > Configuración del proyecto > Cuentas de servicio.
+- [Documentación de Ionic](https://ionicframework.com/docs)
+- [Documentación de Firebase](https://firebase.google.com/docs)
+- [Documentación de Capacitor](https://capacitorjs.com/docs)
 
-El archivo se ve similar a:
+## 🤝 Contribución
 
-```json
-{
-  "type": "service_account",
-  "project_id": "tu_project_id",
-  "private_key_id": "tu_private_key_id",
-  "private_key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk@tu_project_id.iam.gserviceaccount.com",
-  ...
-}
-```
+Las contribuciones son bienvenidas. Por favor, lee nuestras guías de contribución antes de enviar un pull request.
 
-### Ejecutar el servidor
+## 📄 Licencia
 
-```bash
-node index.js
-```
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
----
+## 👥 Créditos
 
-## Créditos
-
-El código del servidor `firebase-push-tester` se basó en el repositorio original de [@alejofdezm](https://github.com/alejofdezm). Se realizaron modificaciones para permitir:
-
-- Envío de imágenes en notificaciones.
-- Configuración de prioridad personalizada en Android.
-
----
-
-## Licencia
-
-Este proyecto es de uso educativo y puede ser modificado libremente para pruebas y aprendizaje.
+Desarrollado como proyecto educativo para demostrar las capacidades de Ionic y Firebase en el desarrollo de aplicaciones móviles modernas.
