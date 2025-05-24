@@ -8,6 +8,7 @@ import { LoginScreen } from './modules/LoginPage/LoginScreen';
 import Tabs from './pages/Tabs';
 
 import { RegisterScreen } from './pages/Register';
+import CameraPage from './pages/CameraPage';
 
 /* Components */
 import '@ionic/react/css/core.css';
@@ -22,6 +23,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import './theme/maps.css'
+
 import { useAuth } from './hooks/useAuth';
 import SplashScreen from './components/SplashScreen';
 import { useEffect } from 'react';
@@ -48,6 +50,7 @@ const App: React.FC = () => {
           {user ? (
             <>
               <Route path="/tabs" render={() => <Tabs />} />
+              <Route path="/camera" exact render={() => <CameraPage />} />
               <Route exact path="/">
                 <Redirect to="/tabs/home" />
               </Route>

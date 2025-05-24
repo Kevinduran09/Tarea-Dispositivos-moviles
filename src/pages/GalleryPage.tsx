@@ -3,6 +3,7 @@ import { IonContent, IonPage, IonIcon, IonLoading, IonAlert, IonModal, IonButton
 import { camera, close, trash, create } from 'ionicons/icons';
 import { CameraService, Photo } from '../Services/CameraService';
 import { useAuthStore } from '../store/useAuthStore';
+import { useHistory } from 'react-router-dom';
 import AppHeader from '../components/head/AppHeader';
 import EmptyState from '../components/gallery/EmptyState';
 import CategoryFilter from '../components/gallery/CategoryFilter';
@@ -29,6 +30,7 @@ const GalleryPage: React.FC = () => {
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const user = useAuthStore((state) => state.user);
   const cameraService = new CameraService();
+  const history = useHistory();
 
   useEffect(() => {
     loadPhotos();
@@ -46,15 +48,8 @@ const GalleryPage: React.FC = () => {
     }
   };
 
-  const handleTakePhoto = async () => {
-    try {
-      if (!user) return;
-      const photoUri = await cameraService.takePicture();
-      const newPhoto = await cameraService.uploadPhoto(photoUri, user.uid);
-      setPhotos(prevPhotos => [newPhoto, ...prevPhotos]);
-    } catch (error) {
-      console.error('Error al tomar la foto:', error);
-    }
+  const handleTakePhoto = () => {
+    history.push('/camera');
   };
 
   const handleDeleteClick = (photo: Photo) => {
