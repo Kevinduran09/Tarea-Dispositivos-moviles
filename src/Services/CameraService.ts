@@ -8,7 +8,7 @@ export interface Photo {
   url: string;
   createdAt: Date;
   userId: string;
-  category?: string;
+  category: string;
 }
 
 export class CameraService {
@@ -31,8 +31,9 @@ export class CameraService {
 
   async uploadPhoto(photoUri: string, userId: string, category?: string): Promise<Photo> {
     try {
-      const response = await fetch(photoUri);
-      const blob = await response.blob();
+      // Convertir base64 a blob
+      const base64Response = await fetch(photoUri);
+      const blob = await base64Response.blob();
       
       const timestamp = new Date().getTime();
       const storageRef = ref(this.storage, `photos/${userId}/${timestamp}.jpg`);
@@ -45,7 +46,7 @@ export class CameraService {
         url: downloadUrl,
         createdAt: new Date(),
         userId,
-        category
+        category: category || 'Sin categoría'
       };
 
       const docRef = await addDoc(collection(db, 'photos'), photoData);

@@ -11,7 +11,7 @@ interface PhotoGridProps {
 
 const PhotoGrid: React.FC<PhotoGridProps> = ({ photos, onEdit, onDelete, onPhotoClick }) => {
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 p-2 mt-4">
+        <div className="columns-2 md:columns-3 space-y-2 p-2 mt-4">
             {photos.map(photo => (
                 <PhotoCard
                     key={photo.id}

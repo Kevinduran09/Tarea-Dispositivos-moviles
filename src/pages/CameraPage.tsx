@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IonContent, IonPage, IonIcon, IonButton, IonLoading } from '@ionic/react';
 import { camera, flash, flashOff, cameraReverse } from 'ionicons/icons';
-import { CameraPreview } from '@capacitor-community/camera-preview';
+import { CameraPreview, CameraPreviewPictureOptions } from '@capacitor-community/camera-preview';
 import { useHistory } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
 import AppHeader from '../components/head/AppHeader';
@@ -58,15 +58,22 @@ const CameraPage: React.FC = () => {
   const takePicture = async () => {
     try {
       setLoading(true);
-      const image = await CameraPreview.capture({
+      const cameraPreviewPictureOptions: CameraPreviewPictureOptions = {
+        quality: 85,
         width: 800,
         height: 600,
-        quality: 85
-      });
+      };
 
-      if (user && image.value) {
-        const newPhoto = await cameraService.uploadPhoto(image.value, user.uid);
-        history.push('/gallery');
+      const result = await CameraPreview.capture(cameraPreviewPictureOptions);
+      
+      if (user && result.value) {
+        // Asegurarnos de que la imagen tenga el prefijo data:image/jpeg;base64,
+        const base64Image = result.value.startsWith('data:') 
+          ? result.value 
+          : `data:image/jpeg;base64,${result.value}`;
+          
+        const newPhoto = await cameraService.uploadPhoto(base64Image, user.uid);
+        history.push('/tabs/gallery');
       }
     } catch (error) {
       console.error('Error al tomar la foto:', error);

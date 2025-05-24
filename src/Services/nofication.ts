@@ -30,42 +30,39 @@ class NotificationService {
   // Inicializar para dispositivos nativos
   private async initializeNative(uid: string) {
     try {
-
       // Solicitar permiso para notificaciones push
       const result = await PushNotifications.requestPermissions();
-
-
 
       if (result.receive === 'granted') {
         // Registrar para recibir notificaciones push
         await PushNotifications.register();
 
+        // Remover listeners existentes antes de agregar nuevos
+        await PushNotifications.removeAllListeners();
 
         // Escuchar por eventos de notificaciones push
         PushNotifications.addListener('registration', (token) => {
-
-
-          const user = useAuthStore.getState().user
-
-          savePushToken(token.value, uid, user?.displayName || 'Sin nombre');
-
-          useAuthStore.getState().setDeviceToken(token.value)
+          const user = useAuthStore.getState().user;
+          // Solo guardar el token si es diferente al actual
+          const currentToken = useAuthStore.getState().deviceToken;
+          if (currentToken !== token.value) {
+            savePushToken(token.value, uid, user?.displayName || 'Sin nombre');
+            useAuthStore.getState().setDeviceToken(token.value);
+          }
         });
 
         PushNotifications.addListener('pushNotificationReceived', (notification) => {
-
           this.addNotification(notification);
           this.notifyListeners();
         });
 
         PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-
           this.addNotification(notification.notification);
           this.notifyListeners();
         });
       }
     } catch (error) {
-      alert('Error al inicializar notificaciones nativas:');
+      console.error('Error al inicializar notificaciones nativas:', error);
     }
   }
 
