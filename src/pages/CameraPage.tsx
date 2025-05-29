@@ -4,7 +4,6 @@ import { camera, flash, flashOff, cameraReverse } from 'ionicons/icons';
 import { CameraPreview, CameraPreviewPictureOptions } from '@capacitor-community/camera-preview';
 import { useHistory } from 'react-router-dom';
 import { Capacitor } from '@capacitor/core';
-import AppHeader from '../components/head/AppHeader';
 import { useAuthStore } from '../store/useAuthStore';
 import { CameraService } from '../Services/CameraService';
 import '../theme/camera.css';

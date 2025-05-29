@@ -36,7 +36,7 @@ const Tabs: React.FC = () => {
         <Route path="/tabs/map" exact component={Maps} />
         <Route path="/tabs/acelerometro" exact component={Acelerometro} />
         <Route path="/tabs/gallery" exact component={GalleryPage} />
-
+    
         {/* Ruta protegida para Admin */}
         <ProtectedRoute path="/tabs/admin" roleRequired="admin" component={AdminPage} />
 
