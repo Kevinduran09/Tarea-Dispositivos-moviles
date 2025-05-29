@@ -1,24 +1,27 @@
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/react';
 import { Redirect, Route } from 'react-router';
-import { homeOutline, personCircleOutline, phonePortraitOutline, shieldOutline, phoneLandscapeOutline, mapOutline, imagesOutline } from 'ionicons/icons';
+import { homeOutline, personCircleOutline, shieldOutline, phoneLandscapeOutline, mapOutline, imagesOutline, qrCodeOutline } from 'ionicons/icons';
 
 import Home from './Home';
 import AdminPage from '../modules/Administrator/adminScreen'
 import ProtectedRoute from '../components/segurity/ProtectedRouter';
 import { useAuthStore } from '../store/useAuthStore';
 import Account from './Account';
-import DeviceInfoPage from './DeviceInfoPage';
 import Acelerometro from './Acelerometro';
 import Maps from './MapsPage';
 import GalleryPage from './GalleryPage';
 import { Style } from '@capacitor/status-bar';
 import { StatusBar } from '@capacitor/status-bar';
 import { useEffect } from 'react';
+import { QRPage } from './QRPage';
+
 const Tabs: React.FC = () => {
   const role = useAuthStore((state) => state.role);
+
   useEffect(() => {
     setupStatusBar();
   }, []);
+
   const setupStatusBar = async () => {
     try {
       await StatusBar.setStyle({ style: Style.Dark });
@@ -28,6 +31,7 @@ const Tabs: React.FC = () => {
       console.error('Error setting up status bar:', error);
     }
   };
+
   return (
     <IonTabs>
       <IonRouterOutlet>
@@ -36,8 +40,7 @@ const Tabs: React.FC = () => {
         <Route path="/tabs/map" exact component={Maps} />
         <Route path="/tabs/acelerometro" exact component={Acelerometro} />
         <Route path="/tabs/gallery" exact component={GalleryPage} />
-    
-        {/* Ruta protegida para Admin */}
+        <Route path="/tabs/qr" exact component={QRPage} />
         <ProtectedRoute path="/tabs/admin" roleRequired="admin" component={AdminPage} />
 
         <Redirect exact from="/tabs" to="/tabs/home" />
@@ -46,7 +49,7 @@ const Tabs: React.FC = () => {
         </Route>
       </IonRouterOutlet>
 
-      <IonTabBar slot="bottom">
+      <IonTabBar slot="bottom" className="ion-tab-bar">
         <IonTabButton tab="home" href="/tabs/home">
           <IonIcon icon={homeOutline} />
           <IonLabel>Inicio</IonLabel>
@@ -62,6 +65,11 @@ const Tabs: React.FC = () => {
           <IonLabel>Mapa</IonLabel>
         </IonTabButton>
 
+        <IonTabButton tab="qr" href="/tabs/qr">
+          <IonIcon icon={qrCodeOutline} />
+          <IonLabel>QR</IonLabel>
+        </IonTabButton>
+
         <IonTabButton tab="acelerometro" href="/tabs/acelerometro">
           <IonIcon icon={phoneLandscapeOutline} />
           <IonLabel>Acelerómetro</IonLabel>
@@ -72,7 +80,6 @@ const Tabs: React.FC = () => {
           <IonLabel>Cuenta</IonLabel>
         </IonTabButton>
 
-        {/* Mostrar el tab de Admin solo si el rol es 'admin' */}
         {role === 'admin' && (
           <IonTabButton tab="admin" href="/tabs/admin">
             <IonIcon icon={shieldOutline} />

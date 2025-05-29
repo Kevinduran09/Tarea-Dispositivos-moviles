@@ -1,0 +1,22 @@
+.scanner-active {
+  --background: transparent !important;
+  --ion-background-color: transparent;
+   /* z-index: -1 !important; */
+}
+
+.scanner-active ion-content {
+  /* --background: transparent !important;  */
+  --ion-background-color: transparent !important;
+}
+
+.scanner-active ion-header {
+  display: none !important;
+}
+
+.scanner-active ion-footer {
+  display: none !important;
+}
+
+.scanner-active ion-tab-bar {
+  display: none !important;
+} 
