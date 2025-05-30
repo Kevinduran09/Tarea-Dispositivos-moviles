@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IonContent, IonPage, IonSegment, IonSegmentButton, IonLabel } from '@ionic/react';
-import { QRGenerator } from '../components/QRGenerator';
-import { QRScanner } from '../components/QRScanner';
+import { QRGenerator } from '../components/qr/QRGenerator';
+import { QRScanner } from '../components/qr/QRScanner';
 
 export const QRPage: React.FC = () => {
     const [selectedTab, setSelectedTab] = useState<'generate' | 'scan'>('scan');

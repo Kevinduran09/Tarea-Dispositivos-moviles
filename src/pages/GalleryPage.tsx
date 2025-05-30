@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { IonContent, IonPage, IonIcon, IonLoading, IonAlert, IonModal, IonButton } from '@ionic/react';
 import { camera, close, trash, create } from 'ionicons/icons';
 import { CameraService, Photo } from '../Services/CameraService';
-import { useAuthStore } from '../store/useAuthStore';
 import { useHistory } from 'react-router-dom';
 import AppHeader from '../components/head/AppHeader';
 import EmptyState from '../components/gallery/EmptyState';
@@ -28,7 +27,6 @@ const GalleryPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
-  const user = useAuthStore((state) => state.user);
   const cameraService = new CameraService();
   const history = useHistory();
 
