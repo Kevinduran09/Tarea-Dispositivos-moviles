@@ -1,6 +1,6 @@
 import { IonButton, IonContent, IonHeader, IonPage } from '@ionic/react'
 import React, { useState } from 'react'
-import MapComponent from '../components/MapComponent'
+import MapComponent from '../components/Map/MapComponent'
 import '../theme/maps.css'
 import MapOSM from '../components/Map/MapOSM'
 const MapsPage: React.FC = () => {

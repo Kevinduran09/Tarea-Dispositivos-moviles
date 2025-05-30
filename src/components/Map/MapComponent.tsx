@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { GoogleMap } from '@capacitor/google-maps';
-import useLocation from '../hooks/useLocation';
+import useLocation from '../../hooks/useLocation';
 import AddMarkerModal from './AddMarkerModal';
-import { Marker } from '../types/map.types';
-import { createMap, addCurrentLocationMarker } from '../utils/mapUtils';
+import { Marker } from '../../types/map.types';
+import { createMap, addCurrentLocationMarker } from '../../utils/mapUtils';
 
 const MapComponent: React.FC = () => {
     const { state, getCurrentPosition, requestPermissions } = useLocation();

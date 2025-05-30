@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { IonButton, IonContent, IonHeader, IonTitle, IonInput, IonLabel, IonItem, IonTextarea, IonModal } from '@ionic/react';
-import { AddMarkerModalProps } from '../types/map.types';
+import { AddMarkerModalProps } from '../../types/map.types';
 
 const AddMarkerModal: React.FC<AddMarkerModalProps> = ({ lat, lng, onDismiss, onAddMarker }) => {
     const [title, setTitle] = useState('');

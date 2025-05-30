@@ -1,22 +1,36 @@
-.scanner-active {
-  --background: transparent !important;
-  --ion-background-color: transparent;
-   /* z-index: -1 !important; */
+ 
+
+/* Ocultar elementos que puedan interferir con la cámara */
+body.scanner-active ion-header,
+body.scanner-active ion-footer,
+body.scanner-active ion-toolbar,
+body.scanner-active ion-content,
+body.scanner-active ion-page,
+body.scanner-active ion-app {
+  visibility: hidden;
 }
 
-.scanner-active ion-content {
-  /* --background: transparent !important;  */
-  --ion-background-color: transparent !important;
+.floating-button {
+  position: fixed !important;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2147483647;
+  --background: rgba(255, 255, 255, 0.9);
+  --color: #000;
+  --border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  --padding-start: 0;
+  --padding-end: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-.scanner-active ion-header {
-  display: none !important;
+.floating-button ion-icon {
+  font-size: 24px;
 }
-
-.scanner-active ion-footer {
-  display: none !important;
-}
-
-.scanner-active ion-tab-bar {
-  display: none !important;
-} 

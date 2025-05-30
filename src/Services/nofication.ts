@@ -42,6 +42,7 @@ class NotificationService {
 
         // Escuchar por eventos de notificaciones push
         PushNotifications.addListener('registration', (token) => {
+          
           const user = useAuthStore.getState().user;
           // Solo guardar el token si es diferente al actual
           const currentToken = useAuthStore.getState().deviceToken;

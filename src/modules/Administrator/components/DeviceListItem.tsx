@@ -14,21 +14,21 @@ interface DeviceListItemProps {
         token: string;
         owner: string;
     };
-    onSelectToken: (token: string) => boolean;
+    onSelectToken: (token: string) => void;
     onSendSingle: (token: string) => void;
+    isSelected: boolean;
 }
 
 const DeviceListItem: React.FC<DeviceListItemProps> = ({
     device,
     onSelectToken,
     onSendSingle,
+    isSelected,
 }) => {
-    const [isSelected, setIsSelected] = useState(false);
     const [showToken, setShowToken] = useState(false);
 
     const handleSelect = () => {
-        const isAdd = onSelectToken(device.token);
-        setIsSelected(isAdd);
+        onSelectToken(device.token);
     };
 
     const toggleShowToken = () => {

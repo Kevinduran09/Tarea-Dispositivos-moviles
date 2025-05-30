@@ -85,6 +85,7 @@ export default function useTopicsStorage() {
     const toggleSubscribe = async (index: number, topic: string) => {
         if (!storeInstance) return;
         try {
+           
             const action = topics[index].isSubscribe ? 'unsubscribe' : 'subscribe';
 
             // Actualizamos el estado de la UI antes de la llamada

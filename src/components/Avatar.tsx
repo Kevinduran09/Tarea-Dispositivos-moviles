@@ -9,7 +9,7 @@ function Avatar() {
     const [showPopover, setShowPopover] = useState(false);
     const auth = getAuth();
     const history = useHistory();
-    const [popoverEvent, setPopoverEvent] = useState<any>(null);
+    const [popoverEvent, setPopoverEvent] = useState<MouseEvent | null>(null);
     const { user } = useAuthStore()
     async function handleLogout() {
         await signOut(auth);
